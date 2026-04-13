@@ -1,0 +1,64 @@
+---
+title: "Basketball_Spending"
+format: html
+editor: visual
+---
+
+
+
+
+```{r}
+library(dplyr)
+library(tidyverse)
+library(readr)
+
+sports <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2022/2022-03-29/sports.csv')
+
+basketball_stat <- readr::read_csv("data/College Basketball Dataset-2019.csv")
+
+basketball <- readr::read_csv("data/College Basketball Dataset.csv")
+
+basketball <- basketball |> filter(YEAR %in% c("2015", "2016", "2017", "2018"))
+
+```
+
+
+
+
+```{r}
+basketball_2015_2019 <- bind_rows(basketball, basketball_stat) |>
+
+  mutate(YEAR = ifelse(is.na(YEAR), "2019", YEAR)) |>
+  select(TEAM, CONF, G, W, POSTSEASON, SEED, YEAR) 
+
+
+  basketball_2015_2019$YEAR <- as.numeric(basketball_2015_2019$YEAR)
+
+basketball_2015_2019
+```
+
+
+
+```{r}
+basketball_money <- sports |> filter(sports == "Basketball") |>
+  filter(classification_code == "1")|>
+  select(year, unitid, institution_name, state_cd, classification_code, classification_name, sector_cd, sector_name, partic_men, partic_women, sum_partic_men, sum_partic_women, rev_men, rev_women, total_rev_menwomen, exp_men, exp_women, total_exp_menwomen, sports) |>
+  rename(YEAR = year) |>
+  rename(TEAM = institution_name)
+```
+
+
+```{r}
+df <- bind_rows(basketball_2015_2019, basketball_money)
+```
+
+
+
+
+
+
+
+
+
+
+
