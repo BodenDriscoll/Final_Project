@@ -4,15 +4,13 @@ format: html
 editor: visual
 ---
 
-
-
-
 ```{r}
 library(dplyr)
 library(tidyverse)
 library(readr)
  library(stringr)
 library(fuzzyjoin)
+library(plotly)
 
 sports <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2022/2022-03-29/sports.csv')
 
@@ -24,22 +22,19 @@ basketball <- basketball |> filter(YEAR %in% c("2015", "2016", "2017", "2018"))
 
 ```
 
-
-
-
 ```{r}
 basketball_2015_2019 <- bind_rows(basketball, basketball_stat) |>
 
   mutate(YEAR = ifelse(is.na(YEAR), "2019", YEAR)) |>
-  select(TEAM, CONF, G, W, POSTSEASON, SEED, YEAR) 
+  select(TEAM, CONF, G, W, POSTSEASON, SEED, YEAR) |>
+  mutate(TEAM = TEAM |>
+  str_to_lower())
 
 
   basketball_2015_2019$YEAR <- as.numeric(basketball_2015_2019$YEAR)
 
 basketball_2015_2019
 ```
-
-
 
 ```{r}
 basketball_money <- sports |> filter(sports == "Basketball") |>
@@ -54,7 +49,13 @@ basketball_money <- sports |> filter(sports == "Basketball") |>
            str_replace_all("campus", "") |>
            str_replace_all("of ", "") |>
            str_replace_all("at ", "") |>
+           str_replace_all("main ","") |>
+           str_replace_all("station ", "") |>
            str_replace_all("-", " ") |>
+           str_replace_all("chapel hill", "") |>
+           str_replace_all("ann arbor", "" ) |>
+           str_replace_all("madison", "") |>
+           str_replace_all("raleigh", "" ) |>
            str_squish())
 ```
 
@@ -63,12 +64,52 @@ df <- stringdist_left_join(
   basketball_2015_2019, basketball_money,
   by = "TEAM",
   method = "osa",           # Optimal String Alignment
-  max_dist = 3,             # Allow up to 2 changes (add, drop, swap)
+  max_dist = 1,             # Allow up to 2 changes (add, drop, swap)
   distance_col = "str_dist"
 )
+
+df <- df |> filter(YEAR.x == YEAR.y) |>
+  rename(YEAR = YEAR.x,
+         TEAM = TEAM.x) |>
+  select(- YEAR.y,
+         - TEAM.y) |>
+  mutate(in_tournament = if_else(!is.na(POSTSEASON), 1, 0))
+```
+
+Comparing teams who made the tournament versus those who didn't
+
+
+```{r}
+tourney_vs_no_tourney <- df |> group_by(in_tournament)
+
+ggplot(tourney_vs_no_tourney, aes(x = in_tournament, y = rev_men,
+                                  label = TEAM)) +
+  geom_point()
 ```
 
 
+
+
+
+
+
+Looking at the Blue Bloods
+
+```{r}
+blue_bloods <- df |>
+ filter(TEAM %in% c("duke", "north carolina", "kentucky", "kansas", "villanova", "connecticut", "ucla")) |>
+  group_by(TEAM)
+
+blue_bloods_plot <- ggplot(data = blue_bloods, aes(x = YEAR, y = rev_men, color = POSTSEASON,
+                               label = TEAM)) +
+  geom_point() +
+  theme_minimal() +
+  scale_color_viridis_d()
+```
+
+```{r}
+ggplotly(blue_bloods_plot, tooltip = "label")
+```
 
 
 
