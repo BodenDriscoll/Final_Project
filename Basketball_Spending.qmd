@@ -11,6 +11,8 @@ editor: visual
 library(dplyr)
 library(tidyverse)
 library(readr)
+ library(stringr)
+library(fuzzyjoin)
 
 sports <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2022/2022-03-29/sports.csv')
 
@@ -44,13 +46,30 @@ basketball_money <- sports |> filter(sports == "Basketball") |>
   filter(classification_code == "1")|>
   select(year, unitid, institution_name, state_cd, classification_code, classification_name, sector_cd, sector_name, partic_men, partic_women, sum_partic_men, sum_partic_women, rev_men, rev_women, total_rev_menwomen, exp_men, exp_women, total_exp_menwomen, sports) |>
   rename(YEAR = year) |>
-  rename(TEAM = institution_name)
+  rename(TEAM = institution_name) |>
+  mutate(TEAM = TEAM |>
+           str_to_lower() |>
+           str_replace_all("university", "") |>
+           str_replace_all("college", "") |>
+           str_replace_all("campus", "") |>
+           str_replace_all("of ", "") |>
+           str_replace_all("at ", "") |>
+           str_replace_all("-", " ") |>
+           str_squish())
 ```
-
 
 ```{r}
-df <- bind_rows(basketball_2015_2019, basketball_money)
+df <- stringdist_left_join(
+  basketball_2015_2019, basketball_money,
+  by = "TEAM",
+  method = "osa",           # Optimal String Alignment
+  max_dist = 3,             # Allow up to 2 changes (add, drop, swap)
+  distance_col = "str_dist"
+)
 ```
+
+
+
 
 
 
