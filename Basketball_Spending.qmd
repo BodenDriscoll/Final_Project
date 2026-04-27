@@ -73,7 +73,7 @@ df <- df |> filter(YEAR.x == YEAR.y) |>
          TEAM = TEAM.x) |>
   select(- YEAR.y,
          - TEAM.y) |>
-  mutate(in_tournament = if_else(!is.na(POSTSEASON), 1, 0))
+  mutate(in_tournament = !is.na(POSTSEASON))
 ```
 
 Comparing teams who made the tournament versus those who didn't
@@ -82,7 +82,7 @@ Comparing teams who made the tournament versus those who didn't
 ```{r}
 tourney_vs_no_tourney <- df |> group_by(in_tournament)
 
-ggplot(tourney_vs_no_tourney, aes(x = in_tournament, y = rev_men,
+ggplot(tourney_vs_no_tourney, aes(x = rev_men, y = YEAR,  color = in_tournament,
                                   label = TEAM)) +
   geom_point()
 ```
