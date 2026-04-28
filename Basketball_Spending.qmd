@@ -73,7 +73,8 @@ df <- df |> filter(YEAR.x == YEAR.y) |>
          TEAM = TEAM.x) |>
   select(- YEAR.y,
          - TEAM.y) |>
-  mutate(in_tournament = !is.na(POSTSEASON))
+  mutate(in_tournament = !is.na(POSTSEASON)) |>
+mutate(profit_men = rev_men - exp_men)
 ```
 
 Comparing teams who made the tournament versus those who didn't
@@ -82,7 +83,7 @@ Comparing teams who made the tournament versus those who didn't
 ```{r}
 tourney_vs_no_tourney <- df |> group_by(in_tournament)
 
-ggplot(tourney_vs_no_tourney, aes(x = rev_men, y = YEAR,  color = in_tournament,
+ggplot(tourney_vs_no_tourney, aes(x = profit_men, y = YEAR,  color = in_tournament,
                                   label = TEAM)) +
   geom_point()
 ```
@@ -100,11 +101,12 @@ blue_bloods <- df |>
  filter(TEAM %in% c("duke", "north carolina", "kentucky", "kansas", "villanova", "connecticut", "ucla")) |>
   group_by(TEAM)
 
-blue_bloods_plot <- ggplot(data = blue_bloods, aes(x = YEAR, y = rev_men, color = POSTSEASON,
+blue_bloods_plot <- ggplot(data = blue_bloods, aes(x = YEAR, y = profit_men, color = POSTSEASON,
                                label = TEAM)) +
   geom_point() +
   theme_minimal() +
-  scale_color_viridis_d()
+  scale_color_viridis_d() +
+  scale_y_continuous(labels = scales::comma)
 ```
 
 ```{r}
@@ -112,7 +114,20 @@ ggplotly(blue_bloods_plot, tooltip = "label")
 ```
 
 
+Shiny app for Teams
 
+
+```{r}
+df_one_conf <- df |> filter(CONF == "ACC") 
+
+ggplot(df_one_conf, aes(x = W, y = profit_men)) +
+  geom_col()
+```
+
+```{r}
+ggplot(df, aes(x = W)) +
+  geom_bar()
+```
 
 
 
