@@ -1,0 +1,60 @@
+---
+title: "ai_responses"
+format: html
+editor: visual
+---
+
+
+
+how do I get multiple things on a label in ggplotly?
+
+The trick is: ggplotly only shows one “tooltip field” at a time, so if you want multiple things, you must combine them into one string first.
+
+
+p <- ggplot(data, aes(
+  x = profit_men,
+  y = W,
+  text = paste(
+    "Team:", TEAM,
+    "<br>Year:", YEAR,
+    "<br>Wins:", W
+  )
+)) +
+  geom_point()
+
+plotly::ggplotly(p, tooltip = "text")
+
+
+
+
+How do an If else statement for a shiny app when I have some variables that are not numeric?
+
+
+In Shiny, if/else works the same as regular R—but you use it inside reactive contexts (like renderPlot, reactive, etc.), not at the top level.
+
+
+
+output$plot <- renderPlot({
+
+  if (input$variable == "W") {
+    ggplot(data, aes(x = W)) + geom_histogram()
+  } else {
+    ggplot(data, aes(x = profit_men)) + geom_histogram()
+  }
+
+})
+
+
+
+How to use multiple labels on ggplotly?
+
+ggplotly does NOT use label the way you expect—it often just prints the expression (so you see "paste(...)").
+
+
+aes(text = paste(
+  "Team:", TEAM,
+  "<br>Year:", YEAR,
+  "<br>Conf:", CONF
+  
+  
+  
