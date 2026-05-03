@@ -106,7 +106,7 @@ tourney_plot <- ggplot(tourney_vs_no_tourney, aes(x = YEAR, y = profit_men,  col
 ggplotly(tourney_plot, tooltip = "label")
 ```
 
-The visual above depicts teams who made the NCAA March Madness tournament from 2015 to 2019 with profit of each team during each year. Based on the visual, there is clear correlation between teams who made the tournament versus those who did not. Teams who made the tournament were in the range of 5 million dollars profit each year. While teams who did not make the tournament were in the realm of 500,000 dollars to maybe \$1.5 million.
+The visual above depicts teams who made the NCAA March Madness tournament from 2015 to 2019 with profit of each team during each year. Based on the visual, there is clear correlation between teams who made the tournament versus those who did not. Teams who made the tournament were in the range of 5 million dollars profit each year. While teams who did not make the tournament were in the realm of 500,000 dollars to maybe $1.5 million.
 
 Some things that stand out in this image is that there are some very large profits from teams that could easily skew the data. There is most likely enough data points to keep the data as a good visual but there are some teams that have much larger profits than others. Each year, Louisville had the highest profit and it wasn't even close with over 20 million dollars in profit. This is the aftermath of the 2013 season where Louisville won the national title. It did not go in there favor, as two of these five years they did not make the tournament. While a few years following this, Rick Pitino (Louisville coach) was found to be paying players and was fired. Their national championship was vacated and Louisville has not been the same team since in the ACC.
 
