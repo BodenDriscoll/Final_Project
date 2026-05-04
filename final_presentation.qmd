@@ -8,10 +8,9 @@ editor: visual
 
 ## College Basketball Spending
 
-- The data set I am using depicts college basketball teams from 2015 through 2019
+-   The data set I am using depicts college basketball teams from 2015 through 2019
 
-- Some of the most important variables I will be using are:
-
+-   Some of the most important variables I will be using are:
 
 ```{r}
 library(dplyr)
@@ -86,40 +85,15 @@ df <- df |> filter(YEAR.x == YEAR.y) |>
 mutate(profit_men = rev_men - exp_men)
 ```
 
-
-
-
-
 ## How does profits of college basketball programs compare to wins?
 
-- Since the data is before NIL, I am unable to predict wins based on how much money each school is spending
+-   Since the data is before NIL, I am unable to predict wins based on how much money each school is spending
 
-- Instead, I am interested in how each team does based on how much profit they are bringing in
+-   Instead, I am interested in how each team does based on how much profit they are bringing in
 
-- Typically the larger schools have larger arenas with much larger fan engagement
+-   Typically the larger schools have larger arenas with much larger fan engagement
 
-- While some of these larger schools may not be a great program, therefore losing money because they spend to much each year
-
-## Blue Bloods
-
-```{r}
-blue_bloods <- df |>
- filter(TEAM %in% c("duke", "north carolina", "kentucky", "kansas", "villanova", "connecticut", "ucla")) |>
-  group_by(TEAM)
-
-blue_bloods_plot <- ggplot(data = blue_bloods, aes(x = YEAR, y = profit_men, color = TEAM,
-                               label = POSTSEASON)) +
-  geom_point() +
-  theme_minimal() +
-  scale_color_viridis_d() +
-  scale_y_continuous(labels = scales::comma) +
-  theme_minimal(base_size = 24) +
-  labs(y = "profit")
-```
-
-```{r}
-ggplotly(blue_bloods_plot, tooltip = "label")
-```
+-   While some of these larger schools may not be a great program, therefore losing money because they spend to much each year
 
 
 ## In the Tournament vs Not in Tournament
@@ -140,18 +114,34 @@ tourney_plot <- ggplot(tourney_vs_no_tourney, aes(x = YEAR, y = profit_men,  col
 ggplotly(tourney_plot, tooltip = "label")
 ```
 
+## Profits vs Postseason Success
 
 
-## is a new slide (whatever is directly after is the slide title)
+```{r}
+df <-  df |> mutate(POSTSEASON = as.numeric(factor(POSTSEASON,
+    levels = c("R68", "R64", "R32", 
+               "S16", "E8", "F4", "2ND" ,"Champions")
+  )))
+```
 
-Style of presentation
+```{r}
+finish_vs_profit <- ggplot(df, aes(x = profit_men, y = POSTSEASON, color = W,
+                                   label = TEAM)) +
+  geom_point(alpha = 0.6) +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(
+    title = "Team Profit vs. Postseason Success",
+    x = "Profit",
+    y = "Postseason Round"
+  ) +
+    scale_color_viridis_c() +
+  scale_x_continuous(labels = scales::comma)
+```
 
-Data of introduction: show data set or specific variables
+```{r}
+ggplotly(finish_vs_profit, tooltip = "label")
+```
 
-Question of interest
 
-Then slides depicted graphs that you have made
 
-## USE base size within graph to make scales larger
 
-in theme (base_size = 24)

@@ -1,3 +1,0 @@
-# College Basketball Spending
-
-During my Data Visualization class, my final project focuses on college basketball spending from 2015 through 2019. The goal of my data is to determine if a team who makes more profit from their basketball teams ultimately leads to more wins. Throughout the project, I made a multitude of visuals to display this along with a shiny application. There is a slight trend that shows more profitable basketball teams correlates with more wins and a better finish in March Madness. With this being prior to NIL, the world of basketball has changed and the spending on college basketball teams has not only changed, but ballooned in size. 
