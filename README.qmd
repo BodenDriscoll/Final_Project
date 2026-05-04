@@ -93,17 +93,13 @@ During my Data Visualization class, my final project focuses on college basketba
 ```{r}
 tourney_vs_no_tourney <- df |> group_by(in_tournament)
 
-tourney_plot <- ggplot(tourney_vs_no_tourney, aes(x = YEAR, y = profit_men,  color = in_tournament,
+ggplot(tourney_vs_no_tourney, aes(x = YEAR, y = profit_men,  color = in_tournament,
                                   label = TEAM)) +
   geom_point() +
   geom_smooth(se = FALSE) +
     scale_y_continuous(labels = scales::comma) +
   labs(title = "Analyzing Teams in the Tournament vs not in Tournament"  ,
        y = "profit")
-```
-
-```{r}
-ggplotly(tourney_plot, tooltip = "label")
 ```
 
 The visual above depicts teams who made the NCAA March Madness tournament from 2015 to 2019 with profit of each team during each year. Based on the visual, there is clear correlation between teams who made the tournament versus those who did not. Teams who made the tournament were in the range of 5 million dollars profit each year. While teams who did not make the tournament were in the realm of 500,000 dollars to maybe $1.5 million.
@@ -119,7 +115,7 @@ df <-  df |> mutate(POSTSEASON = as.numeric(factor(POSTSEASON,
 ```
 
 ```{r}
-finish_vs_profit <- ggplot(df, aes(x = profit_men, y = POSTSEASON, color = W,
+ggplot(df, aes(x = profit_men, y = POSTSEASON, color = W,
                                    label = TEAM)) +
   geom_point(alpha = 0.6) +
   geom_smooth(method = "lm", se = FALSE) +
@@ -132,9 +128,6 @@ finish_vs_profit <- ggplot(df, aes(x = profit_men, y = POSTSEASON, color = W,
   scale_x_continuous(labels = scales::comma)
 ```
 
-```{r}
-ggplotly(finish_vs_profit, tooltip = "label")
-```
 
 
 
